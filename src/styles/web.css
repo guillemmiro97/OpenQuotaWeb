@@ -1,0 +1,31 @@
+/* Web shell: full-width dashboard, readable secondary screens. */
+
+html,
+body,
+#app {
+  max-width: none;
+  background: #101012;
+}
+
+#app {
+  display: block;
+}
+
+.popover {
+  max-width: none !important;
+  height: 100%;
+}
+
+/* The web build has no desktop window chrome or panel resizing. */
+.floating-chrome,
+.panel-resize-dragger {
+  display: none !important;
+}
+
+/* Dashboard fills the viewport; customize/settings stay readable. */
+.screen-page[data-screen='customize'],
+.screen-page[data-screen='settings'],
+.screen-page[data-screen^='provider:'] {
+  max-width: 720px;
+  margin: 0 auto;
+}

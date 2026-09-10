@@ -1,0 +1,45 @@
+# OpenQuota web server.
+#
+#   docker compose up -d
+#   open http://localhost:8080/
+
+services:
+  openquota:
+    build:
+      context: .
+    image: openquota-web:0.5.0
+    container_name: openquota
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Optional HTTP Basic authentication. Set both to protect the dashboard.
+      OPENQUOTA_AUTH_USER: ${OPENQUOTA_AUTH_USER:-}
+      OPENQUOTA_AUTH_PASSWORD: ${OPENQUOTA_AUTH_PASSWORD:-}
+      # Optional API-key providers (otherwise add them in the UI).
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      ZAI_API_KEY: ${ZAI_API_KEY:-}
+      GLM_API_KEY: ${GLM_API_KEY:-}
+      KIMI_API_KEY: ${KIMI_API_KEY:-}
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY:-}
+    volumes:
+      - openquota-data:/data
+      - openquota-config:/config
+      # Host CLI logins (Codex, OpenCode) are not mounted by default: import
+      # them from the web UI (Customize -> provider -> Sign in). To mount them
+      # instead, add a local docker-compose.override.yml (gitignored), e.g.
+      #   services:
+      #     openquota:
+      #       volumes:
+      #         - ${HOME}/.codex:/data/home/.codex
+      #         - ${HOME}/.local/share/opencode:/data/xdg-data/opencode
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+
+volumes:
+  openquota-data:
+  openquota-config:
