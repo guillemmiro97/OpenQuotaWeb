@@ -41,17 +41,14 @@ const requireExactKeyLines = (source, content, expectations) => {
 };
 
 requireContracts('CI', ci, [
-  'os: [windows-latest, macos-latest, ubuntu-22.04]',
-  'Test Windows Credential Manager integration',
-  'Test macOS Keychain integration',
-  'Test Linux Secret Service integration',
-  'Prepare Linux AppImage bundler',
-  'Build Windows installer',
-  'Build macOS DMG',
-  'Build Linux packages',
-  'uses: ./.github/actions/platform-smoke',
-  'dbus-tests',
-  "APPLE_SIGNING_IDENTITY: '-'",
+  'runs-on: ubuntu-22.04',
+  'Verify application versions',
+  'Verify frontend-backend command contract',
+  'Test frontend',
+  'Build frontend',
+  'Lint Rust',
+  'Test Rust',
+  'Build web server',
 ]);
 
 requireContracts('release', release, [
