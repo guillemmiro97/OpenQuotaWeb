@@ -120,7 +120,10 @@ pub struct GrokProvider {
 }
 
 impl GrokProvider {
-    pub(crate) fn new(storage: Arc<Storage>, pricing: Arc<PricingStore>) -> Result<Self, GrokError> {
+    pub(crate) fn new(
+        storage: Arc<Storage>,
+        pricing: Arc<PricingStore>,
+    ) -> Result<Self, GrokError> {
         Ok(Self {
             storage,
             pricing,
