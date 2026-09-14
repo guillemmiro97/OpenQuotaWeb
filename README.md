@@ -50,15 +50,15 @@ docker compose logs -f   # server logs
 
 Copy `.env.example` to `.env` and edit it. **Never commit the populated `.env`.**
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `OPENQUOTA_AUTH_USER` | *(empty)* | HTTP Basic username (optional). |
-| `OPENQUOTA_AUTH_PASSWORD` | *(empty)* | HTTP Basic password (optional). |
-| `OPENROUTER_API_KEY` | *(empty)* | OpenRouter API key. |
-| `DEEPSEEK_API_KEY` | *(empty)* | DeepSeek API key. |
-| `ZAI_API_KEY` / `GLM_API_KEY` | *(empty)* | Z.ai API key. |
-| `KIMI_API_KEY` | *(empty)* | Kimi API key. |
-| `MINIMAX_API_KEY` | *(empty)* | MiniMax API key. |
+| Variable                      | Default   | Description                     |
+| ----------------------------- | --------- | ------------------------------- |
+| `OPENQUOTA_AUTH_USER`         | _(empty)_ | HTTP Basic username (optional). |
+| `OPENQUOTA_AUTH_PASSWORD`     | _(empty)_ | HTTP Basic password (optional). |
+| `OPENROUTER_API_KEY`          | _(empty)_ | OpenRouter API key.             |
+| `DEEPSEEK_API_KEY`            | _(empty)_ | DeepSeek API key.               |
+| `ZAI_API_KEY` / `GLM_API_KEY` | _(empty)_ | Z.ai API key.                   |
+| `KIMI_API_KEY`                | _(empty)_ | Kimi API key.                   |
+| `MINIMAX_API_KEY`             | _(empty)_ | MiniMax API key.                |
 
 If you set both `OPENQUOTA_AUTH_USER` and `OPENQUOTA_AUTH_PASSWORD`, the whole
 dashboard is protected with HTTP Basic (`/api/health` stays open for the
@@ -66,12 +66,12 @@ healthcheck). The browser remembers the credentials after the first prompt.
 
 Server variables (usually no need to change):
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `OPENQUOTA_HOST` | `0.0.0.0` | Listen interface. |
-| `OPENQUOTA_PORT` | `8080` | Port. |
-| `OPENQUOTA_STATIC_DIR` | `/app/dist` | Compiled frontend. |
-| `OPENQUOTA_APP_DATA_DIR` | `$XDG_DATA_HOME/io.github.deviffyy.openquota` | Data directory. |
+| Variable                 | Default                                       | Description        |
+| ------------------------ | --------------------------------------------- | ------------------ |
+| `OPENQUOTA_HOST`         | `0.0.0.0`                                     | Listen interface.  |
+| `OPENQUOTA_PORT`         | `8080`                                        | Port.              |
+| `OPENQUOTA_STATIC_DIR`   | `/app/dist`                                   | Compiled frontend. |
+| `OPENQUOTA_APP_DATA_DIR` | `$XDG_DATA_HOME/io.github.deviffyy.openquota` | Data directory.    |
 
 ## Credentials
 
@@ -80,12 +80,12 @@ Server variables (usually no need to change):
 file from your machine. The server writes it with `0600` permissions and enables
 the provider automatically.
 
-| Provider | File to paste (on your machine) |
-| --- | --- |
-| Codex | `~/.codex/auth.json` |
-| Claude | `~/.claude/.credentials.json` |
-| OpenCode | `~/.local/share/opencode/auth.json` |
-| Antigravity | Antigravity's `auth.json` |
+| Provider    | File to paste (on your machine)     |
+| ----------- | ----------------------------------- |
+| Codex       | `~/.codex/auth.json`                |
+| Claude      | `~/.claude/.credentials.json`       |
+| OpenCode    | `~/.local/share/opencode/auth.json` |
+| Antigravity | Antigravity's `auth.json`           |
 
 Alternatively, mount the host directories. Add a local, gitignored
 `docker-compose.override.yml`:
@@ -108,9 +108,9 @@ precedence over the environment one.
 
 ## Persistence and backup
 
-| Volume | Mount | Contents |
-| --- | --- | --- |
-| `openquota_openquota-data` | `/data` | SQLite, prices, file key store, CLI homes |
+| Volume                       | Mount     | Contents                                  |
+| ---------------------------- | --------- | ----------------------------------------- |
+| `openquota_openquota-data`   | `/data`   | SQLite, prices, file key store, CLI homes |
 | `openquota_openquota-config` | `/config` | `$XDG_CONFIG_HOME` (per-provider configs) |
 
 Everything survives `docker compose restart`. The backup contains credentials,
@@ -137,21 +137,36 @@ docker compose up -d
 - To publish on localhost only, map the port as `"127.0.0.1:8080:8080"`.
 - API keys and tokens are never written to the logs.
 
+## Release integrity
+
+The original desktop installers are still published by the release workflow, so
+their trust model is unchanged:
+
+- Update payloads are cryptographically signed with the Tauri updater key, and
+  OpenQuota refuses unsigned or tampered updates.
+- Windows installers are Authenticode-signed when native signing is enabled;
+  without it the build is unsigned and SmartScreen may warn.
+- macOS builds are Developer ID-signed and notarized when native signing is
+  enabled; otherwise they use an ad-hoc signature and Gatekeeper may require
+  manual approval.
+
+See [docs/releasing.md](docs/releasing.md) for the signing configuration.
+
 ## API
 
 The server exposes the same commands the desktop app used:
 
-| Method | Route | Tauri equivalent |
-| --- | --- | --- |
-| GET | `/api/bootstrap` | `get_bootstrap_state` |
-| GET/PUT | `/api/settings` | `get_app_settings` / `save_app_settings` |
-| POST | `/api/settings/reset-*` | reset customization / all / per provider |
-| POST | `/api/usage/refresh[/{id}]` | refresh usage |
-| POST | `/api/codex/reset-claim` | `claim_codex_reset_credit` |
-| GET/PUT/DELETE | `/api/providers/{id}/api-key` | provider API key |
-| PUT | `/api/providers/{id}/credentials` | import CLI credentials |
-| GET | `/api/events` | `usage-state` / `settings-state` (SSE) |
-| GET | `/api/health` | healthcheck |
+| Method         | Route                             | Tauri equivalent                         |
+| -------------- | --------------------------------- | ---------------------------------------- |
+| GET            | `/api/bootstrap`                  | `get_bootstrap_state`                    |
+| GET/PUT        | `/api/settings`                   | `get_app_settings` / `save_app_settings` |
+| POST           | `/api/settings/reset-*`           | reset customization / all / per provider |
+| POST           | `/api/usage/refresh[/{id}]`       | refresh usage                            |
+| POST           | `/api/codex/reset-claim`          | `claim_codex_reset_credit`               |
+| GET/PUT/DELETE | `/api/providers/{id}/api-key`     | provider API key                         |
+| PUT            | `/api/providers/{id}/credentials` | import CLI credentials                   |
+| GET            | `/api/events`                     | `usage-state` / `settings-state` (SSE)   |
+| GET            | `/api/health`                     | healthcheck                              |
 
 ## Development
 
