@@ -14,7 +14,6 @@
     onSettingsState,
     onUpdateProgress,
     onUsageState,
-    openProviderLink as openProviderLinkCommand,
     openNotificationSettings as openSystemNotificationSettings,
     openLogFolder as openSystemLogFolder,
     quitApplication,
@@ -43,14 +42,9 @@
   import { desktopPlatform, shortcutLabels } from './lib/platform';
   import { withProviderName } from './lib/providerNames';
   import RenameProviderSheet from './lib/RenameProviderSheet.svelte';
-  import {
-    buildProviderShareRows,
-    renderProviderShareCard,
-    renderTotalSpendShareCard,
-  } from './lib/shareCard';
+  import { buildProviderShareRows, renderProviderShareCard } from './lib/shareCard';
   import SettingsScreen from './lib/SettingsScreen.svelte';
   import { SettingsController } from './lib/settingsController.svelte';
-  import type { SpendProjection } from './lib/totalSpend';
   import type { AppSettings, UsageViewState } from './lib/types';
   import { nextUpdateLabel, UpdateController } from './lib/updateController.svelte';
   import { automaticUpdateDelay, UPDATE_CHECK_INTERVAL_MS } from './lib/updateSchedule';
@@ -229,14 +223,6 @@
     customizationHistory = [...customizationHistory.slice(-19), cloneSettings(current.settings)];
     saveSettings(next);
   }
-  function openRenameProvider(providerId: string) {
-    const current = settingsState;
-    if (!current) return;
-    renameCard = {
-      id: providerId,
-      initialValue: current.settings.providerNames[providerId] ?? '',
-    };
-  }
   async function closeRenameProvider() {
     const providerId = renameCard?.id;
     renameCard = null;
@@ -340,9 +326,6 @@
       settingsError = `${providerDisplayName(providerId)} usage could not be refreshed.`;
     }
   }
-  function openProviderLink(providerId: string, linkIndex: number) {
-    void openProviderLinkCommand(providerId, linkIndex).catch(() => {});
-  }
   function requestCustomizationReset() {
     resetConfirmationOpen = true;
   }
@@ -442,25 +425,6 @@
       await copyCanvas(canvas, snapshot);
     } catch {
       settingsError = 'Provider screenshot could not be copied.';
-    }
-  }
-  async function shareTotalSpend(projection: SpendProjection) {
-    const current = settingsState;
-    if (!current) return false;
-    const card = document.querySelector<HTMLElement>('[data-total-spend]');
-    if (!card) return false;
-    try {
-      const canvas = renderTotalSpendShareCard(catalog, {
-        projection,
-        providerNames: current.settings.providerNames,
-        metric: current.settings.totalSpendMetric,
-        period: current.settings.totalSpendPeriod,
-      });
-      await copyCanvas(canvas, card.innerText.trim());
-      return true;
-    } catch {
-      settingsError = 'Total Spend screenshot could not be copied.';
-      return false;
     }
   }
   async function copyLogPath() {

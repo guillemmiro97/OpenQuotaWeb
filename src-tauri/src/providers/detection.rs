@@ -37,8 +37,7 @@ async fn detect_local_credentials_with_timeout(
         let provider_id = provider_id.clone();
         let probe_provider_id = provider_id.clone();
         let probe = crate::runtime::spawn(async move {
-            let worker =
-                crate::runtime::spawn_blocking(move || runtime.has_local_credentials());
+            let worker = crate::runtime::spawn_blocking(move || runtime.has_local_credentials());
             match tokio::time::timeout(timeout, worker).await {
                 Ok(Ok(true)) => CredentialProbeStatus::Detected,
                 Ok(Ok(false)) => CredentialProbeStatus::Absent,

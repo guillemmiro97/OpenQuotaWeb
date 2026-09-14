@@ -47,8 +47,7 @@
       rows="4"
       spellcheck="false"
       placeholder={'{ "access_token": "..." }'}
-      aria-label={`${providerName} credentials`}
-    ></textarea>
+      aria-label={`${providerName} credentials`}></textarea>
     <button
       class="credentials-save"
       type="button"
