@@ -74,9 +74,7 @@
   );
   const alertCount = $derived(
     enabledProviders.filter((id) =>
-      (viewState.providers[id]?.snapshot?.quotas ?? []).some(
-        (quota) => quota.usedPercent >= 85,
-      ),
+      (viewState.providers[id]?.snapshot?.quotas ?? []).some((quota) => quota.usedPercent >= 85),
     ).length,
   );
 
@@ -184,7 +182,11 @@
 
   <section class="kpis" aria-label="Summary">
     <div class="kpi">
-      <span class="kpi__label">Spend · {settings.totalSpendPeriod === 'last30Days' ? '30 days' : settings.totalSpendPeriod}</span>
+      <span class="kpi__label"
+        >Spend · {settings.totalSpendPeriod === 'last30Days'
+          ? '30 days'
+          : settings.totalSpendPeriod}</span
+      >
       <strong class="kpi__value">{totalSpend.hasCost ? money(totalSpend.cost) : '—'}</strong>
       <span class="kpi__hint">{tokens(totalSpend.tokens)} tokens</span>
     </div>
@@ -295,7 +297,9 @@
               <button class="btn" type="button" onclick={() => onRefreshProvider(id)}>Retry</button>
             </div>
           {:else}
-            <div class="card__empty"><p class="muted">{state?.refreshing ? 'Loading…' : 'No data yet'}</p></div>
+            <div class="card__empty">
+              <p class="muted">{state?.refreshing ? 'Loading…' : 'No data yet'}</p>
+            </div>
           {/if}
         </article>
       {/each}

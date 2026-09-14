@@ -268,8 +268,8 @@ pub async fn get_api_key(
 ) -> ApiResult<Option<ProviderApiKeyState>> {
     let runtime = resolve_runtime(&state, &provider_id)?;
     let id = provider_id.clone();
-    let result = crate::runtime::spawn_blocking(
-        move || -> Result<Option<ProviderApiKeyState>, String> {
+    let result =
+        crate::runtime::spawn_blocking(move || -> Result<Option<ProviderApiKeyState>, String> {
             let Some(status) = runtime.api_key_status() else {
                 return Ok(None);
             };
@@ -278,11 +278,10 @@ pub async fn get_api_key(
                 provider_id: id,
                 status,
             }))
-        },
-    )
-    .await
-    .map_err(|_| internal("The API key status could not be read."))?
-    .map_err(internal)?;
+        })
+        .await
+        .map_err(|_| internal("The API key status could not be read."))?
+        .map_err(internal)?;
     Ok(Json(result))
 }
 
@@ -342,12 +341,7 @@ fn mutate_api_key(
     })
 }
 
-fn reconcile_credential(
-    state: &AppState,
-    provider_id: &str,
-    detected: bool,
-    enable: bool,
-) -> bool {
+fn reconcile_credential(state: &AppState, provider_id: &str, detected: bool, enable: bool) -> bool {
     match state
         .settings
         .reconcile_provider_credential_state(provider_id, detected, enable)
@@ -710,7 +704,9 @@ pub async fn require_auth(
             STANDARD.decode(encoded.trim()).ok()
         })
         .and_then(|bytes| String::from_utf8(bytes).ok())
-        .is_some_and(|credentials| credentials == format!("{configured_user}:{configured_password}"));
+        .is_some_and(|credentials| {
+            credentials == format!("{configured_user}:{configured_password}")
+        });
 
     if authorized {
         next.run(request).await
