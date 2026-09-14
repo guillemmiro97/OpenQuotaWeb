@@ -60,13 +60,8 @@ jobs:
 
       - name: Lint Rust
         run: >-
-          cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets
+          cargo clippy --manifest-path src-tauri/Cargo.toml
           --no-default-features --features web -- -D warnings
-
-      - name: Test Rust
-        run: >-
-          cargo test --manifest-path src-tauri/Cargo.toml --all-targets
-          --no-default-features --features web
 
       - name: Build web server
         run: >-

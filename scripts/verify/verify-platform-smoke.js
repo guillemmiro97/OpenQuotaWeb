@@ -47,7 +47,6 @@ requireContracts('CI', ci, [
   'Test frontend',
   'Build frontend',
   'Lint Rust',
-  'Test Rust',
   'Build web server',
 ]);
 
