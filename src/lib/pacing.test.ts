@@ -116,7 +116,10 @@ describe('quota pacing', () => {
       .formatToParts(new Date(reset))
       .find((part) => part.type === 'dayPeriod')?.value;
     expect(dayPeriod).toBeTruthy();
-    expect(twelveHour).toContain(dayPeriod);
-    expect(twentyFourHour).not.toContain(dayPeriod);
+    // Node ICU versions differ on whether the day-period separator is a regular
+    // space or a narrow no-break space, so compare with normalized spacing.
+    const normalize = (value: string) => value.replace(/[\u202f\u00a0]/g, ' ');
+    expect(normalize(twelveHour)).toContain(normalize(dayPeriod!));
+    expect(normalize(twentyFourHour)).not.toContain(normalize(dayPeriod!));
   });
 });

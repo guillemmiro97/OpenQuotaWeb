@@ -1,12 +1,14 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ProviderApiKeySection from './ProviderApiKeySection.svelte';
+import { installBackendBridge } from '../test/backendBridge';
 
 const mocks = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke: mocks.invoke }));
 
 describe('ProviderApiKeySection', () => {
   beforeEach(() => {
+    installBackendBridge(mocks.invoke);
     mocks.invoke.mockReset().mockImplementation((command: string) => {
       if (command === 'get_provider_api_key_state') {
         return Promise.resolve({ providerId: 'openrouter', status: 'notSet' });
@@ -42,7 +44,7 @@ describe('ProviderApiKeySection', () => {
         apiKey: 'sk-or-secret',
       }),
     );
-    expect(screen.queryByDisplayValue('sk-or-secret')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByDisplayValue('sk-or-secret')).not.toBeInTheDocument());
     expect(screen.getByRole('textbox', { name: 'OpenRouter API key source' })).toHaveValue(
       'Saved securely',
     );
@@ -82,14 +84,17 @@ describe('ProviderApiKeySection', () => {
     expect(screen.queryByDisplayValue('override')).not.toBeInTheDocument();
 
     const removeTrigger = screen.getByRole('button', { name: 'Remove saved API key' });
+    await waitFor(() => expect(removeTrigger).toBeEnabled());
     await fireEvent.click(removeTrigger);
     expect(mocks.invoke).not.toHaveBeenCalledWith('delete_provider_api_key', {
       providerId: 'openrouter',
     });
-    expect(
-      screen.getByRole('group', { name: 'Remove saved API key?' }),
-    ).toHaveAccessibleDescription(
-      "The saved key will be removed from secure storage. This can't be undone.",
+    await waitFor(() =>
+      expect(
+        screen.getByRole('group', { name: 'Remove saved API key?' }),
+      ).toHaveAccessibleDescription(
+        "The saved key will be removed from secure storage. This can't be undone.",
+      ),
     );
     const cancel = screen.getByRole('button', { name: 'Cancel' });
     await waitFor(() => expect(cancel).toHaveFocus());
@@ -116,8 +121,10 @@ describe('ProviderApiKeySection', () => {
     expect(
       mocks.invoke.mock.calls.filter(([command]) => command === 'delete_provider_api_key'),
     ).toHaveLength(1);
-    expect(screen.getByRole('textbox', { name: 'OpenRouter API key source' })).toHaveValue(
-      'From Your Environment',
+    await waitFor(() =>
+      expect(screen.getByRole('textbox', { name: 'OpenRouter API key source' })).toHaveValue(
+        'From Your Environment',
+      ),
     );
     await waitFor(() => expect(screen.getByRole('button', { name: 'Done' })).toHaveFocus());
   });

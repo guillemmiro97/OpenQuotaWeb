@@ -56,10 +56,3 @@ impl DeepSeekClient {
         Ok(BalanceResponse { status, body })
     }
 }
-
-#[cfg(test)]
-impl DeepSeekClient {
-    pub fn for_test(balance_url: &str, timeout: Duration) -> Self {
-        Self::with_endpoint(balance_url, timeout).unwrap()
-    }
-}
