@@ -120,11 +120,9 @@ export function getProviderApiKeyState(providerId: string) {
 }
 
 export function saveProviderCredentials(providerId: string, content: string) {
-  return request<void>(
-    'PUT',
-    `/providers/${encodeURIComponent(providerId)}/credentials`,
-    { content },
-  );
+  return request<void>('PUT', `/providers/${encodeURIComponent(providerId)}/credentials`, {
+    content,
+  });
 }
 
 export function saveProviderApiKey(providerId: string, apiKey: string) {
