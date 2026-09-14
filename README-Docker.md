@@ -64,18 +64,18 @@ docker compose logs -f   # logs del servidor
 Se parte de `deviffyy/OpenQuota` **v0.5.0** y se mantiene el código original. Los
 cambios son mínimos y están marcados por la feature `web`:
 
-| Fichero | Cambio |
-| --- | --- |
-| `src-tauri/Cargo.toml` | Features `desktop` (por defecto) y `web`; las dependencias de Tauri pasan a ser opcionales. Se añade el binario `openquota-server`. |
-| `src-tauri/src/lib.rs` | Los módulos compartidos pasan a `pub`; la app Tauri queda bajo `feature = "desktop"`. |
-| `src-tauri/src/runtime.rs` | Helper tokio compartido que sustituye a `tauri::async_runtime` en el código compartido. |
-| `src-tauri/src/service.rs`, `provider_environment.rs`, `providers/detection.rs` | `tauri::async_runtime` → `crate::runtime`. |
-| `src-tauri/src/providers/api_key.rs` | En web usa un almacén de credenciales en fichero; en escritorio mantiene el llavero del sistema. |
-| `src-tauri/src/logging.rs` | Salida opcional de logs a stdout (`enable_console_output`). |
-| `src-tauri/src/server/` | **Nuevo**: servidor Axum (rutas, SSE, refresh loop, secret store). |
-| `src/lib/backend.ts` | Se reescribe para hablar HTTP/SSE en vez de `invoke`/`listen`, con la **misma API pública**. |
-| `src/lib/tauriWindowStub.ts` + `vite.config.ts` | Stub de `@tauri-apps/api/window` para el build web. |
-| `src/styles/web.css` | Centra el panel en la página. |
+| Fichero                                                                         | Cambio                                                                                                                              |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `src-tauri/Cargo.toml`                                                          | Features `desktop` (por defecto) y `web`; las dependencias de Tauri pasan a ser opcionales. Se añade el binario `openquota-server`. |
+| `src-tauri/src/lib.rs`                                                          | Los módulos compartidos pasan a `pub`; la app Tauri queda bajo `feature = "desktop"`.                                               |
+| `src-tauri/src/runtime.rs`                                                      | Helper tokio compartido que sustituye a `tauri::async_runtime` en el código compartido.                                             |
+| `src-tauri/src/service.rs`, `provider_environment.rs`, `providers/detection.rs` | `tauri::async_runtime` → `crate::runtime`.                                                                                          |
+| `src-tauri/src/providers/api_key.rs`                                            | En web usa un almacén de credenciales en fichero; en escritorio mantiene el llavero del sistema.                                    |
+| `src-tauri/src/logging.rs`                                                      | Salida opcional de logs a stdout (`enable_console_output`).                                                                         |
+| `src-tauri/src/server/`                                                         | **Nuevo**: servidor Axum (rutas, SSE, refresh loop, secret store).                                                                  |
+| `src/lib/backend.ts`                                                            | Se reescribe para hablar HTTP/SSE en vez de `invoke`/`listen`, con la **misma API pública**.                                        |
+| `src/lib/tauriWindowStub.ts` + `vite.config.ts`                                 | Stub de `@tauri-apps/api/window` para el build web.                                                                                 |
+| `src/styles/web.css`                                                            | Centra el panel en la página.                                                                                                       |
 
 El build de escritorio original sigue funcionando (`cargo check --lib`).
 
@@ -85,23 +85,23 @@ El build de escritorio original sigue funcionando (`cargo check --lib`).
 
 Copia `.env.example` a `.env` y edítalo:
 
-| Variable | Por defecto | Descripción |
-| --- | --- | --- |
-| `OPENQUOTA_AUTH_USER` | *(vacío)* | Usuario de HTTP Basic (opcional). |
-| `OPENQUOTA_AUTH_PASSWORD` | *(vacío)* | Contraseña de HTTP Basic (opcional). |
-| `OPENROUTER_API_KEY` | *(vacío)* | API key de OpenRouter. |
-| `DEEPSEEK_API_KEY` | *(vacío)* | API key de DeepSeek. |
-| `ZAI_API_KEY` / `GLM_API_KEY` | *(vacío)* | API key de Z.ai. |
-| `KIMI_API_KEY` | *(vacío)* | API key de Kimi. |
-| `MINIMAX_API_KEY` | *(vacío)* | API key de MiniMax. |
+| Variable                      | Por defecto | Descripción                          |
+| ----------------------------- | ----------- | ------------------------------------ |
+| `OPENQUOTA_AUTH_USER`         | _(vacío)_   | Usuario de HTTP Basic (opcional).    |
+| `OPENQUOTA_AUTH_PASSWORD`     | _(vacío)_   | Contraseña de HTTP Basic (opcional). |
+| `OPENROUTER_API_KEY`          | _(vacío)_   | API key de OpenRouter.               |
+| `DEEPSEEK_API_KEY`            | _(vacío)_   | API key de DeepSeek.                 |
+| `ZAI_API_KEY` / `GLM_API_KEY` | _(vacío)_   | API key de Z.ai.                     |
+| `KIMI_API_KEY`                | _(vacío)_   | API key de Kimi.                     |
+| `MINIMAX_API_KEY`             | _(vacío)_   | API key de MiniMax.                  |
 
 Variables del servidor (normalmente no hace falta tocarlas):
 
-| Variable | Por defecto | Descripción |
-| --- | --- | --- |
-| `OPENQUOTA_HOST` | `0.0.0.0` | Interfaz de escucha. |
-| `OPENQUOTA_PORT` | `8080` | Puerto. |
-| `OPENQUOTA_STATIC_DIR` | `/app/dist` | Frontend compilado. |
+| Variable                 | Por defecto                                   | Descripción          |
+| ------------------------ | --------------------------------------------- | -------------------- |
+| `OPENQUOTA_HOST`         | `0.0.0.0`                                     | Interfaz de escucha. |
+| `OPENQUOTA_PORT`         | `8080`                                        | Puerto.              |
+| `OPENQUOTA_STATIC_DIR`   | `/app/dist`                                   | Frontend compilado.  |
 | `OPENQUOTA_APP_DATA_DIR` | `$XDG_DATA_HOME/io.github.deviffyy.openquota` | Directorio de datos. |
 
 Si defines `OPENQUOTA_AUTH_USER` y `OPENQUOTA_AUTH_PASSWORD`, **todo** el
@@ -122,12 +122,12 @@ Estos proveedores leen ficheros locales. Tienes dos opciones:
 credenciales. El servidor lo guarda con permisos `0600` en la ruta correcta y
 activa el proveedor automáticamente.
 
-| Proveedor | Fichero a pegar (en tu equipo) |
-| --- | --- |
-| Codex | `~/.codex/auth.json` |
-| Claude | `~/.claude/.credentials.json` |
-| OpenCode | `~/.local/share/opencode/auth.json` |
-| Antigravity | `auth.json` de Antigravity |
+| Proveedor   | Fichero a pegar (en tu equipo)      |
+| ----------- | ----------------------------------- |
+| Codex       | `~/.codex/auth.json`                |
+| Claude      | `~/.claude/.credentials.json`       |
+| OpenCode    | `~/.local/share/opencode/auth.json` |
+| Antigravity | `auth.json` de Antigravity          |
 
 **B) Montar los directorios del host** en el contenedor. `docker-compose.yml`
 ya monta Codex y OpenCode desde `${USERPROFILE}` (Windows); en Linux/macOS
@@ -145,12 +145,12 @@ volumes:
 
 Rutas que lee OpenQuota:
 
-| Proveedor | Variable | Ruta por defecto |
-| --- | --- | --- |
-| Codex | `CODEX_HOME` | `/data/home/.codex` (`auth.json`, `sessions/`) |
-| Claude | `CLAUDE_CONFIG_DIR` | `/data/home/.claude` (`.credentials.json`) |
-| OpenCode | `OPENCODE_DATA_DIR` / `XDG_DATA_HOME` | `/data/xdg-data/opencode` |
-| Antigravity | — | `/data/xdg-data/io.github.deviffyy.openquota/antigravity/auth.json` |
+| Proveedor   | Variable                              | Ruta por defecto                                                    |
+| ----------- | ------------------------------------- | ------------------------------------------------------------------- |
+| Codex       | `CODEX_HOME`                          | `/data/home/.codex` (`auth.json`, `sessions/`)                      |
+| Claude      | `CLAUDE_CONFIG_DIR`                   | `/data/home/.claude` (`.credentials.json`)                          |
+| OpenCode    | `OPENCODE_DATA_DIR` / `XDG_DATA_HOME` | `/data/xdg-data/opencode`                                           |
+| Antigravity | —                                     | `/data/xdg-data/io.github.deviffyy.openquota/antigravity/auth.json` |
 
 ### Proveedores con API key (OpenRouter, DeepSeek, Z.ai, Kimi, MiniMax)
 
@@ -166,10 +166,10 @@ Una key guardada en la UI tiene prioridad sobre la de entorno.
 
 ## Persistencia y backup
 
-| Volumen | Montaje | Contenido |
-| --- | --- | --- |
-| `openquota_openquota-data` | `/data` | SQLite, precios, llavero en fichero, homes de CLIs |
-| `openquota_openquota-config` | `/config` | `$XDG_CONFIG_HOME` (configs por proveedor) |
+| Volumen                      | Montaje   | Contenido                                          |
+| ---------------------------- | --------- | -------------------------------------------------- |
+| `openquota_openquota-data`   | `/data`   | SQLite, precios, llavero en fichero, homes de CLIs |
+| `openquota_openquota-config` | `/config` | `$XDG_CONFIG_HOME` (configs por proveedor)         |
 
 Todo sobrevive a `docker compose restart`.
 
@@ -266,25 +266,25 @@ servidor, o sirve `dist` con tu herramienta favorita y apunta `/api` al servidor
 
 El servidor expone los mismos comandos que usaba la app de escritorio:
 
-| Método | Ruta | Equivalente Tauri |
-| --- | --- | --- |
-| GET | `/api/bootstrap` | `get_bootstrap_state` |
-| GET | `/api/settings` | `get_app_settings` |
-| PUT | `/api/settings` | `save_app_settings` |
-| POST | `/api/settings/reset-customization` | `reset_customization` |
-| POST | `/api/settings/reset-all` | `reset_all_settings` |
-| POST | `/api/settings/reset-provider/{id}` | `reset_provider_customization` |
-| POST | `/api/usage/refresh` | `refresh_usage` |
-| POST | `/api/usage/refresh/{id}` | `refresh_provider_usage` |
-| POST | `/api/codex/reset-claim` | `claim_codex_reset_credit` |
-| GET/PUT/DELETE | `/api/providers/{id}/api-key` | `get/save/delete_provider_api_key` |
-| GET | `/api/providers/{id}/links/{index}` | `open_provider_link` |
-| PUT | `/api/providers/{id}/credentials` | Importar credenciales de CLI (Codex/Claude/OpenCode/Antigravity) |
-| POST | `/api/notifications/permission` | `request_notification_permission` |
-| GET | `/api/logs/path` | `get_log_path` |
-| GET | `/api/updates` | `check_for_updates` (stub en web) |
-| GET | `/api/events` | Eventos `usage-state` / `settings-state` (SSE) |
-| GET | `/api/health` | Healthcheck |
+| Método         | Ruta                                | Equivalente Tauri                                                |
+| -------------- | ----------------------------------- | ---------------------------------------------------------------- |
+| GET            | `/api/bootstrap`                    | `get_bootstrap_state`                                            |
+| GET            | `/api/settings`                     | `get_app_settings`                                               |
+| PUT            | `/api/settings`                     | `save_app_settings`                                              |
+| POST           | `/api/settings/reset-customization` | `reset_customization`                                            |
+| POST           | `/api/settings/reset-all`           | `reset_all_settings`                                             |
+| POST           | `/api/settings/reset-provider/{id}` | `reset_provider_customization`                                   |
+| POST           | `/api/usage/refresh`                | `refresh_usage`                                                  |
+| POST           | `/api/usage/refresh/{id}`           | `refresh_provider_usage`                                         |
+| POST           | `/api/codex/reset-claim`            | `claim_codex_reset_credit`                                       |
+| GET/PUT/DELETE | `/api/providers/{id}/api-key`       | `get/save/delete_provider_api_key`                               |
+| GET            | `/api/providers/{id}/links/{index}` | `open_provider_link`                                             |
+| PUT            | `/api/providers/{id}/credentials`   | Importar credenciales de CLI (Codex/Claude/OpenCode/Antigravity) |
+| POST           | `/api/notifications/permission`     | `request_notification_permission`                                |
+| GET            | `/api/logs/path`                    | `get_log_path`                                                   |
+| GET            | `/api/updates`                      | `check_for_updates` (stub en web)                                |
+| GET            | `/api/events`                       | Eventos `usage-state` / `settings-state` (SSE)                   |
+| GET            | `/api/health`                       | Healthcheck                                                      |
 
 ---
 
@@ -294,21 +294,21 @@ Refleja lo **realmente verificado** en este despliegue. Las cuotas/uso en vivo
 no se pudieron verificar sin cuentas reales, por lo que se marcan como no
 verificadas en lugar de asumirlas.
 
-| Proveedor | Autenticación | Persistente | Cuota visible | Uso visible | Probado |
-| --- | --- | --- | --- | --- | --- |
-| Codex | ChatGPT OAuth (`codex login`) o montar `~/.codex` | sí | no verificado | no verificado | no (sin cuenta) |
-| Claude | Claude OAuth (`claude`) o montar `~/.claude` | sí | no verificado | no verificado | no (sin cuenta) |
-| OpenCode | datos locales (`OPENCODE_DATA_DIR`) | sí | no verificado | no verificado | no (sin cuenta) |
-| OpenRouter | API key (UI / env) | sí | no verificado | no verificado | no (sin key real) |
-| DeepSeek | API key (UI / env) | sí | no verificado | no verificado | no (sin key real) |
-| Kimi | API key (UI / env) | sí | no verificado | no verificado | no (sin key real) |
-| MiniMax | API key (UI / env) | sí | no verificado | no verificado | no (sin key real) |
-| Z.ai | API key (UI / env) | sí | no verificado | no verificado | no (sin key real) |
-| Antigravity | auth local en datos de la app | sí | no verificado | no verificado | no (sin cuenta) |
-| Cursor | login de Cursor Agent | sí | no verificado | no verificado | no (sin cuenta) |
-| Copilot | credenciales GitHub/Copilot | sí | no verificado | no verificado | no (sin cuenta) |
-| Devin | credenciales Devin | sí | no verificado | no verificado | no (sin cuenta) |
-| Grok | credenciales Grok | sí | no verificado | no verificado | no (sin cuenta) |
+| Proveedor   | Autenticación                                     | Persistente | Cuota visible | Uso visible   | Probado           |
+| ----------- | ------------------------------------------------- | ----------- | ------------- | ------------- | ----------------- |
+| Codex       | ChatGPT OAuth (`codex login`) o montar `~/.codex` | sí          | no verificado | no verificado | no (sin cuenta)   |
+| Claude      | Claude OAuth (`claude`) o montar `~/.claude`      | sí          | no verificado | no verificado | no (sin cuenta)   |
+| OpenCode    | datos locales (`OPENCODE_DATA_DIR`)               | sí          | no verificado | no verificado | no (sin cuenta)   |
+| OpenRouter  | API key (UI / env)                                | sí          | no verificado | no verificado | no (sin key real) |
+| DeepSeek    | API key (UI / env)                                | sí          | no verificado | no verificado | no (sin key real) |
+| Kimi        | API key (UI / env)                                | sí          | no verificado | no verificado | no (sin key real) |
+| MiniMax     | API key (UI / env)                                | sí          | no verificado | no verificado | no (sin key real) |
+| Z.ai        | API key (UI / env)                                | sí          | no verificado | no verificado | no (sin key real) |
+| Antigravity | auth local en datos de la app                     | sí          | no verificado | no verificado | no (sin cuenta)   |
+| Cursor      | login de Cursor Agent                             | sí          | no verificado | no verificado | no (sin cuenta)   |
+| Copilot     | credenciales GitHub/Copilot                       | sí          | no verificado | no verificado | no (sin cuenta)   |
+| Devin       | credenciales Devin                                | sí          | no verificado | no verificado | no (sin cuenta)   |
+| Grok        | credenciales Grok                                 | sí          | no verificado | no verificado | no (sin cuenta)   |
 
 ---
 

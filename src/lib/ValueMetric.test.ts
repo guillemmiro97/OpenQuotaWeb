@@ -1,12 +1,14 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ValueMetric from './ValueMetric.svelte';
+import { installBackendBridge } from '../test/backendBridge';
 
 const mocks = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock('@tauri-apps/api/core', () => ({ invoke: mocks.invoke }));
 
 describe('ValueMetric', () => {
   beforeEach(() => {
+    installBackendBridge(mocks.invoke);
     mocks.invoke.mockReset();
   });
   afterEach(cleanup);
